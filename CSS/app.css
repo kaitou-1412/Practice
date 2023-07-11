@@ -1,0 +1,25 @@
+.container {
+  border: 1px solid red;
+  height: auto;
+  width: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper {
+  width: 600px;
+  /* border: 1px solid blue; */
+  display: flex;
+  flex-wrap: wrap;
+  /* justify-content: movement/positioning in the flex-direction  */
+  align-items: flex-start;
+  /* align-items: movement/positioning in opposite of flex-direction  */
+}
+
+.element {
+  color: blueviolet;
+  border: 1px solid green;
+  width: 150px;
+  height: 150px;
+  margin: 20px;
+}
