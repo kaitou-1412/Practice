@@ -8,23 +8,8 @@ import (
 	"strings"
 )
 
-var exampleHtml = `
-<html>
-<body>
-  <h1>Hello!</h1>
-  <a href="/other-page">
-  A link to another page 
-  <span>some span</span>
-  </a>
-  <a href="/second-page">
-  A link to second page 
-  </a>
-</body>
-</html>
-`
-
 func main() {
-	// Get all the flags: filename, port 
+	// Get all the flags: filename 
 	filename := flag.String("file", "examples/ex1.html", "the HTML example file")
 	flag.Parse()
 	fmt.Printf("Using the html in %s.\n", *filename)
