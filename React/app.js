@@ -30,8 +30,6 @@ const Title = () => (
   </a>
 );
 
-/* <i class="fa-solid fa-cart-shopping"></i> */
-
 const Header = () => (
   <div className="header">
     <Title />
@@ -40,7 +38,10 @@ const Header = () => (
         <li>Home</li>
         <li>About</li>
         <li>Contact</li>
-        <li>Cart</li>
+        <li>
+          Cart
+          {/* <i class="fa-solid fa-cart-shopping"></i> */}
+        </li>
       </ul>
     </div>
   </div>
