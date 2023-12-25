@@ -1,6 +1,10 @@
 // RestaurantList is JSON Data for displaying cards
-export const CLOUDINARY_BASE_URL =
+export const IMG_CDN_URL =
   "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/";
+// Swiggy API to get Restaurant data with CORS proxy
+export const swiggy_api_URL =
+  "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9083215&lng=77.6050777&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING";
+export const shimmer_card_unit = 20;
 export const restaurantList = [
   {
     type: "restaurant",
