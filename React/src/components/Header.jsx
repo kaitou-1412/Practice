@@ -1,13 +1,11 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import Logo from "../assets/img/foodhouse.jpg";
 
 const Title = () => (
-  <a href="/">
-    <img
-      className="logo"
-      src="https://foodhouse.co.th/wp-content/uploads/2019/01/foodhouse-18.jpg"
-      alt="Food Fire Logo"
-    />
-  </a>
+  <Link to="/">
+    <img className="logo" src={Logo} alt="Food House Logo" />
+  </Link>
 );
 
 /* <i class="fa-solid fa-cart-shopping"></i> */
@@ -20,9 +18,15 @@ const Header = () => {
       <Title />
       <div className="nav-items">
         <ul>
-          <li>Home</li>
-          <li>About</li>
-          <li>Contact</li>
+          <li>
+            <Link to="/">Hom</Link>e
+          </li>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/contact">Contact</Link>
+          </li>
           <li>Cart</li>
           <li>
             {isLoggedin ? (

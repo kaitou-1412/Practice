@@ -81,3 +81,8 @@
 .shimmer-rating {
   height: 7px;
 }
+
+/* Restaurant Menu CSS */
+.restaurant-menu-container {
+  display: flex;
+}
