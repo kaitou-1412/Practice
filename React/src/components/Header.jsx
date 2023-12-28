@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/img/foodhouse.jpg";
 
 const Title = () => (
@@ -10,8 +9,8 @@ const Title = () => (
 
 /* <i class="fa-solid fa-cart-shopping"></i> */
 
-const Header = () => {
-  const [isLoggedin, setIsLoggedin] = useState(true);
+const Header = ({ isLoggedin, setIsLoggedin }) => {
+  const navigate = useNavigate();
 
   return (
     <div className="header">
@@ -19,7 +18,7 @@ const Header = () => {
       <div className="nav-items">
         <ul>
           <li>
-            <Link to="/">Hom</Link>e
+            <Link to="/">Home</Link>
           </li>
           <li>
             <Link to="/about">About</Link>
@@ -32,7 +31,7 @@ const Header = () => {
             {isLoggedin ? (
               <button onClick={() => setIsLoggedin(false)}>Logout</button>
             ) : (
-              <button onClick={() => setIsLoggedin(true)}>Login</button>
+              <button onClick={() => navigate("/login")}>Login</button>
             )}
           </li>
         </ul>
