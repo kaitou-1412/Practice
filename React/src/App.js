@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Header from "./components/Header";
 import Body from "./components/Body";
 import Footer from "./components/Footer";
-import About from "./components/About";
 import Contact from "./components/Contact";
 import RestaurantMenu from "./components/RestaurantMenu";
 import Profile from "./components/Profile";
 import ProfileClassComponent from "./components/ProfileClass";
 import Login from "./components/Login";
 import Error from "./components/Error";
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import Shimmer from "./components/cards/Shimmer";
 
 /* My Food App structure will look like this, 
   1) Header
@@ -29,6 +29,10 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
       - Copyrights
        
 */
+
+// Chunking/Code Splitting/Dynamic Bundling/Dynamic Import/On Demand Loading/Lazy Loading
+const Instamart = lazy(() => import("./components/Instamart"));
+const About = lazy(() => import("./components/About"));
 
 // AppLayout component to show: Header, Body, Footer
 const AppLayout = () => {
@@ -55,7 +59,11 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "/about",
-        element: <About />,
+        element: (
+          <Suspense fallback={<h1>Loading...</h1>}>
+            <About />
+          </Suspense>
+        ),
         children: [
           {
             path: "profile",
@@ -79,6 +87,14 @@ const appRouter = createBrowserRouter([
       {
         path: "/restaurant/:resId",
         element: <RestaurantMenu />,
+      },
+      {
+        path: "/instamart",
+        element: (
+          <Suspense fallback={<Shimmer />}>
+            <Instamart />
+          </Suspense>
+        ),
       },
     ],
   },

@@ -1,47 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import RestaurantCard from "./cards/RestaurantCard";
 import Shimmer from "./cards/Shimmer";
-import { swiggy_api_URL } from "../config";
-import { Link } from "react-router-dom";
-
-const filterData = (searchText, restaurants) => {
-  return restaurants.filter((restaurant) =>
-    restaurant?.name?.toLowerCase().includes(searchText?.toLowerCase())
-  );
-};
+import { filterData } from "../utils/helper";
+import useRestaurantCards from "../utils/useRestaurantCards";
+import useOnline from "../utils/useOnline";
 
 const Body = () => {
-  const [defaultRestaurants, setDefaultRestaurants] = useState([]);
-  const [restaurants, setRestaurants] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [restaurants, defaultRestaurants] = useRestaurantCards();
 
-  useEffect(() => {
-    getRestaurants();
-  }, []);
+  const online = useOnline();
 
-  async function getRestaurants() {
-    // handle the error using try... catch
-    try {
-      const data = await fetch(swiggy_api_URL);
-      const json = await data.json();
-      const restaurants = json?.data?.cards
-        ?.filter(
-          (card) =>
-            card?.card?.card["@type"] ===
-              "type.googleapis.com/swiggy.gandalf.widgets.v2.GridWidget" &&
-            card?.card?.card?.gridElements?.infoWithStyle["@type"] ===
-              "type.googleapis.com/swiggy.presentation.food.v2.FavouriteRestaurantInfoWithStyle"
-        )
-        .map(
-          (card) => card?.card?.card?.gridElements?.infoWithStyle?.restaurants
-        )
-        .flat()
-        .map((restaurant) => restaurant?.info);
-      setDefaultRestaurants(restaurants);
-      setRestaurants(restaurants);
-    } catch (error) {
-      console.log(error);
-    }
+  if (!online) {
+    return <h1>🔴 Offline, Please check your internet connection!!!</h1>;
   }
 
   // Early return

@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/img/foodhouse.jpg";
+import useOnline from "../utils/useOnline";
 
 const Title = () => (
   <Link to="/">
@@ -11,6 +12,7 @@ const Title = () => (
 
 const Header = ({ isLoggedin, setIsLoggedin }) => {
   const navigate = useNavigate();
+  const isOnline = useOnline();
 
   return (
     <div className="header">
@@ -26,7 +28,11 @@ const Header = ({ isLoggedin, setIsLoggedin }) => {
           <li>
             <Link to="/contact">Contact</Link>
           </li>
+          <li>
+            <Link to="/instamart">Instamart</Link>
+          </li>
           <li>Cart</li>
+          <li>{isOnline ? "✅" : "❌"}</li>
           <li>
             {isLoggedin ? (
               <button onClick={() => setIsLoggedin(false)}>Logout</button>

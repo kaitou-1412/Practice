@@ -1,49 +1,11 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Shimmer from "./cards/Shimmer";
-import { menu_api_URL, IMG_CDN_URL } from "../config";
+import { IMG_CDN_URL } from "../config";
+import useRestaurantInfo from "../utils/useRestaurantInfo";
 
 const RestaurantMenu = () => {
   const { resId } = useParams();
-  const [restaurant, setRestaurant] = useState(null);
-  const [menu, setMenu] = useState([]);
-
-  useEffect(() => {
-    getRestaurantInfo();
-  }, []);
-
-  async function getRestaurantInfo() {
-    try {
-      const data = await fetch(menu_api_URL + resId.toString());
-      const json = await data.json();
-      const restaurantData = json?.data?.cards
-        ?.filter(
-          (card) =>
-            card?.card?.card["@type"] ===
-            "type.googleapis.com/swiggy.presentation.food.v2.Restaurant"
-        )
-        .map((card) => card?.card?.card?.info)[0];
-      const menuData = json?.data?.cards
-        ?.filter((card) => card?.hasOwnProperty("groupedCard"))[0]
-        ?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter(
-          (card) =>
-            card?.card?.card["@type"] ===
-            "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
-        )
-        ?.map((card) => {
-          return {
-            title: card?.card?.card?.title,
-            items: card?.card?.card?.itemCards,
-          };
-        });
-      setRestaurant(restaurantData);
-      setMenu(menuData);
-      console.log("restaurantData", restaurantData);
-      console.log("menuData", menuData);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const [restaurant, menu] = useRestaurantInfo(resId);
 
   return !restaurant ? (
     <Shimmer />
