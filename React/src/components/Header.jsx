@@ -4,7 +4,7 @@ import useOnline from "../utils/useOnline";
 
 const Title = () => (
   <Link to="/">
-    <img className="logo" src={Logo} alt="Food House Logo" />
+    <img className="pl-2 w-24" src={Logo} alt="Food House Logo" />
   </Link>
 );
 
@@ -15,25 +15,25 @@ const Header = ({ isLoggedin, setIsLoggedin }) => {
   const isOnline = useOnline();
 
   return (
-    <div className="header">
+    <div className="flex items-center justify-between bg-red-100 shadow-lg">
       <Title />
       <div className="nav-items">
-        <ul>
-          <li>
+        <ul className="flex">
+          <li className="p-3">
             <Link to="/">Home</Link>
           </li>
-          <li>
+          <li className="p-3">
             <Link to="/about">About</Link>
           </li>
-          <li>
+          <li className="p-3">
             <Link to="/contact">Contact</Link>
           </li>
-          <li>
+          <li className="p-3">
             <Link to="/instamart">Instamart</Link>
           </li>
-          <li>Cart</li>
-          <li>{isOnline ? "✅" : "❌"}</li>
-          <li>
+          <li className="p-3">Cart</li>
+          <li className="p-3">{isOnline ? "✅" : "❌"}</li>
+          <li className="p-3">
             {isLoggedin ? (
               <button onClick={() => setIsLoggedin(false)}>Logout</button>
             ) : (
