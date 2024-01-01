@@ -11,6 +11,7 @@ import ProfileClassComponent from "./components/ProfileClass";
 import Login from "./components/Login";
 import Error from "./components/Error";
 import Shimmer from "./components/cards/Shimmer";
+import UserContext from "./utils/UserContext";
 
 /* My Food App structure will look like this, 
   1) Header
@@ -37,13 +38,17 @@ const About = lazy(() => import("./components/About"));
 // AppLayout component to show: Header, Body, Footer
 const AppLayout = () => {
   const [isLoggedin, setIsLoggedin] = useState(false);
+  const [user, setUser] = useState({
+    name: "Ruban Sahoo",
+    email: "ruban1work@gmail.com",
+  });
 
   return (
-    <React.Fragment>
+    <UserContext.Provider value={{ user: user, setUser: setUser }}>
       <Header isLoggedin={isLoggedin} setIsLoggedin={setIsLoggedin} />
       <Outlet context={[setIsLoggedin]} />
       <Footer />
-    </React.Fragment>
+    </UserContext.Provider>
   );
 };
 

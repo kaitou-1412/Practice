@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import RestaurantCard from "./cards/RestaurantCard";
 import Shimmer from "./cards/Shimmer";
 import { filterData } from "../utils/helper";
 import useRestaurantCards from "../utils/useRestaurantCards";
 import useOnline from "../utils/useOnline";
+import UserContext from "../utils/UserContext";
 
 const Body = () => {
   const [searchInput, setSearchInput] = useState("");
-  const [restaurants, defaultRestaurants] = useRestaurantCards();
+  const [restaurants, defaultRestaurants, setRestaurants] =
+    useRestaurantCards();
+  const { user, setUser } = useContext(UserContext);
 
   const online = useOnline();
 
@@ -40,6 +43,24 @@ const Body = () => {
         >
           Search
         </button>
+        <input
+          value={user.name}
+          onChange={(e) =>
+            setUser({
+              ...user,
+              name: e.target.value,
+            })
+          }
+        ></input>
+        <input
+          value={user.email}
+          onChange={(e) =>
+            setUser({
+              ...user,
+              email: e.target.value,
+            })
+          }
+        ></input>
       </div>
       {restaurants.length === 0 ? (
         <h1>No restaurant matches your search!</h1>

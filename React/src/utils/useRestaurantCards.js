@@ -34,7 +34,7 @@ const useRestaurantCards = () => {
     }
   }
 
-  return [restaurants, defaultRestaurants];
+  return [restaurants, defaultRestaurants, setRestaurants];
 };
 
 export default useRestaurantCards;
