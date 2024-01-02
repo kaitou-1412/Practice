@@ -8,10 +8,13 @@ import Contact from "./components/Contact";
 import RestaurantMenu from "./components/RestaurantMenu";
 import Profile from "./components/Profile";
 import ProfileClassComponent from "./components/ProfileClass";
+import Cart from "./components/Cart";
 import Login from "./components/Login";
 import Error from "./components/Error";
 import Shimmer from "./components/cards/Shimmer";
 import UserContext from "./utils/UserContext";
+import { Provider } from "react-redux";
+import store from "./utils/store";
 
 /* My Food App structure will look like this, 
   1) Header
@@ -44,11 +47,13 @@ const AppLayout = () => {
   });
 
   return (
-    <UserContext.Provider value={{ user: user, setUser: setUser }}>
-      <Header isLoggedin={isLoggedin} setIsLoggedin={setIsLoggedin} />
-      <Outlet context={[setIsLoggedin]} />
-      <Footer />
-    </UserContext.Provider>
+    <Provider store={store}>
+      <UserContext.Provider value={{ user: user, setUser: setUser }}>
+        <Header isLoggedin={isLoggedin} setIsLoggedin={setIsLoggedin} />
+        <Outlet context={[setIsLoggedin]} />
+        <Footer />
+      </UserContext.Provider>
+    </Provider>
   );
 };
 
@@ -98,6 +103,14 @@ const appRouter = createBrowserRouter([
         element: (
           <Suspense fallback={<Shimmer />}>
             <Instamart />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/cart",
+        element: (
+          <Suspense fallback={<Shimmer />}>
+            <Cart />
           </Suspense>
         ),
       },

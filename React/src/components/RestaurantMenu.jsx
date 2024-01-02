@@ -1,11 +1,29 @@
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Shimmer from "./cards/Shimmer";
 import { IMG_CDN_URL } from "../config";
 import useRestaurantInfo from "../utils/useRestaurantInfo";
+import {
+  increaseItemQuantity,
+  decreaseItemQuantity,
+  removeItem,
+} from "../utils/cartSlice";
 
 const RestaurantMenu = () => {
   const { resId } = useParams();
   const [restaurant, menu] = useRestaurantInfo(resId);
+
+  const cartItems = useSelector((store) => store.cart);
+  const dispatch = useDispatch();
+  const handleIncreaseQuantity = (item) => {
+    dispatch(increaseItemQuantity(item));
+  };
+  const handleDecreaseQuantity = (item) => {
+    dispatch(decreaseItemQuantity(item));
+  };
+  const handleRemoveItem = (item) => {
+    dispatch(removeItem(item));
+  };
 
   return !restaurant ? (
     <Shimmer />
@@ -32,8 +50,39 @@ const RestaurantMenu = () => {
                 {category?.items?.map((item, itemIndex) => (
                   <li key={`${itemIndex} - ${item?.card?.info?.id}`}>
                     <p>
-                      <strong>{item?.card?.info?.name}</strong>&#8377;{" "}
-                      {item?.card?.info?.price / 100}
+                      <strong>{item?.card?.info?.name}</strong>
+                      <span className="mx-5 bg-orange-300">
+                        &#8377; {item?.card?.info?.price / 100}
+                      </span>
+                      {cartItems[item?.card?.info?.id] && (
+                        <span className="bg-slate-400">
+                          Q: {cartItems[item?.card?.info?.id].quantity} items
+                        </span>
+                      )}
+                      <span>
+                        <button
+                          className="mx-5 bg-green-100"
+                          onClick={() =>
+                            handleIncreaseQuantity(item?.card?.info)
+                          }
+                        >
+                          ➕
+                        </button>
+                        <button
+                          className="mx-5 bg-red-100"
+                          onClick={() =>
+                            handleDecreaseQuantity(item?.card?.info)
+                          }
+                        >
+                          ➖
+                        </button>
+                        <button
+                          className="mx-5 bg-blue-100"
+                          onClick={() => handleRemoveItem(item?.card?.info)}
+                        >
+                          ⛌
+                        </button>
+                      </span>
                     </p>
                     <p>{item?.card?.info?.description}</p>
                     {/* <img

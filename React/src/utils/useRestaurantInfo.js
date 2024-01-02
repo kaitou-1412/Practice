@@ -35,8 +35,6 @@ const useRestaurantInfo = (resId) => {
         });
       setRestaurant(restaurantData);
       setMenu(menuData);
-      console.log("restaurantData", restaurantData);
-      console.log("menuData", menuData);
     } catch (error) {
       console.log(error);
     }

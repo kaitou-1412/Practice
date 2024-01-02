@@ -1,8 +1,10 @@
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Logo from "../assets/img/foodhouse.jpg";
 import useOnline from "../utils/useOnline";
 import UserContext from "../utils/UserContext";
+import { getDictionaryLength } from "../utils/helper";
 
 const Title = () => (
   <Link to="/">
@@ -16,6 +18,8 @@ const Header = ({ isLoggedin, setIsLoggedin }) => {
   const navigate = useNavigate();
   const isOnline = useOnline();
   const { user } = useContext(UserContext);
+  const cartItems = useSelector((store) => store.cart);
+  const numberOfItems = getDictionaryLength(cartItems);
 
   return (
     <div className="flex items-center justify-between bg-red-100 shadow-lg">
@@ -34,7 +38,9 @@ const Header = ({ isLoggedin, setIsLoggedin }) => {
           <li className="p-3">
             <Link to="/instamart">Instamart</Link>
           </li>
-          <li className="p-3">Cart</li>
+          <li className="p-3">
+            <Link to="/cart">Cart - {numberOfItems} items</Link>
+          </li>
           <li className="p-3">{isOnline ? "✅" : "❌"}</li>
           <li className="p-3 font-bold text-red-900">{user.name}</li>
           <li className="p-3">

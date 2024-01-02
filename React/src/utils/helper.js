@@ -3,3 +3,5 @@ export const filterData = (searchText, restaurants) => {
     restaurant?.name?.toLowerCase().includes(searchText?.toLowerCase())
   );
 };
+
+export const getDictionaryLength = (d) => Object.keys(d).length;
