@@ -11,7 +11,7 @@ const useRestaurantInfo = (resId) => {
 
   async function getRestaurantInfo() {
     try {
-      const data = await fetch(FETCH_MENU_URL + resId.toString());
+      const data = await fetch(FETCH_MENU_URL + resId);
       const json = await data.json();
       const restaurantData = json?.data?.cards
         ?.filter(

@@ -13,7 +13,7 @@ const ShimmerCard = () => {
 
 const Shimmer = () => {
   return (
-    <div className="flex flex-wrap">
+    <div data-testid="shimmer" className="flex flex-wrap">
       {new Array(shimmer_card_unit).fill(0).map((data, index) => {
         return <ShimmerCard key={index}></ShimmerCard>;
       })}

@@ -28,7 +28,7 @@ const RestaurantMenu = () => {
   return !restaurant ? (
     <Shimmer />
   ) : (
-    <div className="flex">
+    <div data-testid="menu" className="flex">
       <div>
         <h2>{restaurant?.name}</h2>
         <img
@@ -40,60 +40,64 @@ const RestaurantMenu = () => {
         <h3>{restaurant?.avgRating} stars</h3>
         <h3>{restaurant?.costForTwoMessage}</h3>
       </div>
-      <div>
-        <h1>Menu</h1>
-        {menu &&
-          menu?.map((category, categoryIndex) => (
-            <div key={categoryIndex}>
-              <h2>{category?.title}</h2>
-              <ol>
-                {category?.items?.map((item, itemIndex) => (
-                  <li key={`${itemIndex} - ${item?.card?.info?.id}`}>
-                    <p>
-                      <strong>{item?.card?.info?.name}</strong>
-                      <span className="mx-5 bg-orange-300">
-                        &#8377; {item?.card?.info?.price / 100}
-                      </span>
-                      {cartItems[item?.card?.info?.id] && (
-                        <span className="bg-slate-400">
-                          Q: {cartItems[item?.card?.info?.id].quantity} items
+      <div className="p-5">
+        <h1 className="font-bold text-3xl">Menu</h1>
+        <ul>
+          {menu &&
+            menu?.map((category, categoryIndex) => (
+              <li key={categoryIndex}>
+                <h2>{category?.title}</h2>
+                <ol>
+                  {category?.items?.map((item, itemIndex) => (
+                    <li key={`${itemIndex} - ${item?.card?.info?.id}`}>
+                      <p>
+                        <strong>{item?.card?.info?.name}</strong>
+                        <span className="mx-5 bg-orange-300">
+                          &#8377; {item?.card?.info?.price / 100}
                         </span>
-                      )}
-                      <span>
-                        <button
-                          className="mx-5 bg-green-100"
-                          onClick={() =>
-                            handleIncreaseQuantity(item?.card?.info)
-                          }
-                        >
-                          ➕
-                        </button>
-                        <button
-                          className="mx-5 bg-red-100"
-                          onClick={() =>
-                            handleDecreaseQuantity(item?.card?.info)
-                          }
-                        >
-                          ➖
-                        </button>
-                        <button
-                          className="mx-5 bg-blue-100"
-                          onClick={() => handleRemoveItem(item?.card?.info)}
-                        >
-                          ⛌
-                        </button>
-                      </span>
-                    </p>
-                    <p>{item?.card?.info?.description}</p>
-                    {/* <img
+                        {cartItems[item?.card?.info?.id] && (
+                          <span className="bg-slate-400">
+                            Q: {cartItems[item?.card?.info?.id].quantity} items
+                          </span>
+                        )}
+                        <span>
+                          <button
+                            data-testid="addBtn"
+                            className="mx-5 bg-green-100"
+                            onClick={() =>
+                              handleIncreaseQuantity(item?.card?.info)
+                            }
+                          >
+                            ➕
+                          </button>
+                          <button
+                            className="mx-5 bg-red-100"
+                            onClick={() =>
+                              handleDecreaseQuantity(item?.card?.info)
+                            }
+                          >
+                            ➖
+                          </button>
+                          <button
+                            data-testid="removeBtn"
+                            className="mx-5 bg-blue-100"
+                            onClick={() => handleRemoveItem(item?.card?.info)}
+                          >
+                            ⛌
+                          </button>
+                        </span>
+                      </p>
+                      <p>{item?.card?.info?.description}</p>
+                      {/* <img
                       src={IMG_CDN_URL + item?.card?.info?.imageId}
                       alt="Item Image"
                     /> */}
-                  </li>
-                ))}
-              </ol>
-            </div>
-          ))}
+                    </li>
+                  ))}
+                </ol>
+              </li>
+            ))}
+        </ul>
       </div>
     </div>
   );

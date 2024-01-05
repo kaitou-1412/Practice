@@ -8,7 +8,12 @@ import { getDictionaryLength } from "../utils/helper";
 
 const Title = () => (
   <Link to="/">
-    <img className="pl-2 w-24" src={Logo} alt="Food House Logo" />
+    <img
+      data-testid="logo"
+      className="pl-2 w-24"
+      src={Logo}
+      alt="Food House Logo"
+    />
   </Link>
 );
 
@@ -39,9 +44,13 @@ const Header = ({ isLoggedin, setIsLoggedin }) => {
             <Link to="/instamart">Instamart</Link>
           </li>
           <li className="p-3">
-            <Link to="/cart">Cart - {numberOfItems} items</Link>
+            <Link to="/cart" data-testid="cart">
+              Cart - {numberOfItems} items
+            </Link>
           </li>
-          <li className="p-3">{isOnline ? "✅" : "❌"}</li>
+          <li data-testid="online-status" className="p-3">
+            {isOnline ? "✅" : "❌"}
+          </li>
           <li className="p-3 font-bold text-red-900">{user.name}</li>
           <li className="p-3">
             {isLoggedin ? (
