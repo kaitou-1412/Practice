@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const Section = ({ title, description, isVisible, setIsVisible }) => {
   return (
-    <div className="border border-black p-2 m-2">
+    <div className="border border-white p-2 m-2">
       <div className="flex justify-between">
         <span className="font-bold text-xl">{title}</span>
         <span className="font-thin">
@@ -24,8 +24,8 @@ const Instamart = () => {
   const [visibleSection, setIsVisibleSection] = useState("about");
 
   return (
-    <div>
-      <h1 className="text-3xl p-2 m-2 font-bold">Instamart</h1>
+    <div className="flex-grow bg-blue text-white p-2">
+      <h1 className="text-3xl p-2 font-bold">Instamart</h1>
       <Section
         title={"About"}
         description={

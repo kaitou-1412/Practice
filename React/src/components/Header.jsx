@@ -27,9 +27,9 @@ const Header = ({ isLoggedin, setIsLoggedin }) => {
   const numberOfItems = getDictionaryLength(cartItems);
 
   return (
-    <div className="flex items-center justify-between bg-red-100 shadow-lg">
+    <div className="p-5 flex items-center justify-between bg-black shadow-lg">
       <Title />
-      <div className="nav-items">
+      <div className="nav-items text-white">
         <ul className="flex">
           <li className="p-3">
             <Link to="/">Home</Link>
@@ -51,7 +51,7 @@ const Header = ({ isLoggedin, setIsLoggedin }) => {
           <li data-testid="online-status" className="p-3">
             {isOnline ? "✅" : "❌"}
           </li>
-          <li className="p-3 font-bold text-red-900">{user.name}</li>
+          <li className="p-3 font-bold text-green">{user.name}</li>
           <li className="p-3">
             {isLoggedin ? (
               <button onClick={() => setIsLoggedin(false)}>Logout</button>

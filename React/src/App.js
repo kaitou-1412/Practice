@@ -49,9 +49,13 @@ const AppLayout = () => {
   return (
     <Provider store={store}>
       <UserContext.Provider value={{ user: user, setUser: setUser }}>
-        <Header isLoggedin={isLoggedin} setIsLoggedin={setIsLoggedin} />
-        <Outlet context={[setIsLoggedin]} />
-        <Footer />
+        <div className="min-h-screen flex flex-col justify-between">
+          <div className="flex-grow flex flex-col">
+            <Header isLoggedin={isLoggedin} setIsLoggedin={setIsLoggedin} />
+            <Outlet context={[setIsLoggedin]} />
+          </div>
+          <Footer />
+        </div>
       </UserContext.Provider>
     </Provider>
   );

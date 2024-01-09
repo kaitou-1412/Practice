@@ -12,12 +12,15 @@ const Cart = () => {
   const numberOfItems = getDictionaryLength(cartItems);
 
   return (
-    <div>
-      <h1 className="font-bold text-3xl">
+    <div className="flex-grow bg-blue p-5">
+      <h1 className="font-bold text-3xl text-white">
         Cart Items - {numberOfItems > 0 ? numberOfItems : "Empty"}
       </h1>
       {numberOfItems > 0 && (
-        <button className="p-2 m-5 bg-green-100" onClick={handleClearCart}>
+        <button
+          className="p-2 m-5 bg-green text-white"
+          onClick={handleClearCart}
+        >
           Clear Cart
         </button>
       )}

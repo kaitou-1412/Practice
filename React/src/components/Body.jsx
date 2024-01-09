@@ -25,60 +25,72 @@ const Body = () => {
   return defaultRestaurants.length === 0 ? (
     <Shimmer />
   ) : (
-    <>
-      <div className="search-container p-5 bg-red-50">
-        <input
-          data-testid="search-input"
-          type="text"
-          className="search-input"
-          placeholder="Search"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-        <button
-          data-testid="search-btn"
-          className="search-btn p-2 my-2 ml-5 bg-purple-800 text-white rounded-lg hover:bg-fuchsia-200 hover:text-black"
-          onClick={() => {
-            const data = filterData(searchInput, defaultRestaurants);
-            setRestaurants(data);
-          }}
-        >
-          Search
-        </button>
-        <input
-          value={user.name}
-          onChange={(e) =>
-            setUser({
-              ...user,
-              name: e.target.value,
-            })
-          }
-        ></input>
-        <input
-          value={user.email}
-          onChange={(e) =>
-            setUser({
-              ...user,
-              email: e.target.value,
-            })
-          }
-        ></input>
+    <div className="flex-grow flex flex-col">
+      <div className="search-container p-5 w-full bg-white flex items-center justify-between">
+        <div>
+          {" "}
+          <input
+            data-testid="search-input"
+            type="text"
+            className="search-input text-black h-8 pl-2 rounded-md border border-solid border-black focus:border focus:border-solid focus:border-blue"
+            placeholder="Search"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
+          <button
+            data-testid="search-btn"
+            className="search-btn p-2 my-2 ml-5 bg-blue text-white rounded-lg hover:bg-green"
+            onClick={() => {
+              const data = filterData(searchInput, defaultRestaurants);
+              setRestaurants(data);
+            }}
+          >
+            Search
+          </button>
+        </div>
+        <div>
+          <input
+            className="text-black text-center px-2 mx-2 rounded-full border border-black"
+            value={user.name}
+            onChange={(e) =>
+              setUser({
+                ...user,
+                name: e.target.value,
+              })
+            }
+          ></input>
+          <input
+            className="text-black mx-2 px-2 rounded-full border border-black"
+            value={user.email}
+            onChange={(e) =>
+              setUser({
+                ...user,
+                email: e.target.value,
+              })
+            }
+          ></input>
+        </div>
       </div>
       {restaurants.length === 0 ? (
         <h1>No restaurant matches your search!</h1>
       ) : (
-        <div data-testid="restaurant-list" className="flex flex-wrap">
-          {restaurants.map((restaurant, index) => (
-            <Link
-              key={`${index}-${restaurant.id}`}
-              to={`/restaurant/${restaurant.id}`}
-            >
-              <RestaurantCard {...restaurant} />
-            </Link>
-          ))}
+        <div className="px-10 py-5 bg-black flex-grow">
+          <div
+            data-testid="restaurant-list"
+            className="flex flex-wrap justify-start"
+          >
+            {restaurants.map((restaurant, index) => (
+              <Link
+                key={`${index}-${restaurant.id}`}
+                to={`/restaurant/${restaurant.id}`}
+              >
+                <RestaurantCard {...restaurant} />
+              </Link>
+            ))}
+          </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

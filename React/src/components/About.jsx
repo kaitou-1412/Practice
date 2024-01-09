@@ -20,16 +20,16 @@ class About extends Component {
   render() {
     console.log("Parent - render");
     return (
-      <div>
-        <h1>About Us Page</h1>
+      <div className="flex-grow bg-blue text-white p-5">
+        <h1 className="font-extrabold text-3xl py-5">About Us Page</h1>
         <UserContext.Consumer>
           {({ user }) => (
-            <h4 className="font-bold text-xl p-10">
+            <h4 className="font-bold text-xl py-10">
               {user.name}- {user.email}
             </h4>
           )}
         </UserContext.Consumer>
-        <p>
+        <p className="py-5">
           {" "}
           Finding the <Link to="profile">Path</Link> 🚀
         </p>

@@ -17,8 +17,8 @@ const Login = () => {
   }
 
   return (
-    <div>
-      <h1>Login Page</h1>
+    <div className="flex-grow bg-blue text-white p-5">
+      <h1 className="font-extrabold text-3xl py-5">Login Page</h1>
       <Formik
         initialValues={{ email: "", password: "" }}
         validate={(values) => {
@@ -43,12 +43,26 @@ const Login = () => {
         }}
       >
         {({ isSubmitting }) => (
-          <Form>
-            <Field type="email" name="email" placeholder="Email" />
+          <Form className="flex flex-col items-start justify-around w-80 h-48">
+            <Field
+              type="email"
+              name="email"
+              placeholder="Email"
+              className="w-full h-8 rounded-lg px-5"
+            />
             <ErrorMessage name="email" component="div" />
-            <Field type="password" name="password" placeholder="Password" />
+            <Field
+              type="password"
+              name="password"
+              placeholder="Password"
+              className="w-full h-8 rounded-lg px-5"
+            />
             <ErrorMessage name="password" component="div" />
-            <button type="submit" disabled={isSubmitting}>
+            <button
+              className="bg-white text-black px-5 py-1 self-center rounded-full"
+              type="submit"
+              disabled={isSubmitting}
+            >
               Submit
             </button>
           </Form>

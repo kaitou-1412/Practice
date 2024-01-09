@@ -5,3 +5,6 @@ export const filterData = (searchText, restaurants) => {
 };
 
 export const getDictionaryLength = (d) => Object.keys(d).length;
+
+export const shortenText = (text, maxLength) =>
+  text.substring(0, maxLength) + (text.length > maxLength ? "..." : "");

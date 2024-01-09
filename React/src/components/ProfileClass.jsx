@@ -19,12 +19,12 @@ class Profile extends React.Component {
     const { name, avatar_url, public_repos } = this.state.userInfo;
     console.log("Child - render");
     return (
-      <>
-        <h2>Profile Class Component</h2>
-        <h3>Name: {name}</h3>
+      <div className="py-5">
+        <h2 className="font-extrabold text-xl">Profile Class Component</h2>
+        <h3 className="pt-5">Name: {name}</h3>
         <h4>Public Repos: {public_repos}</h4>
-        <img src={avatar_url} alt="User Image" />
-      </>
+        <img className="pt-5" src={avatar_url} alt="User Image" />
+      </div>
     );
   }
 

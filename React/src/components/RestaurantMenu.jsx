@@ -1,17 +1,15 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Shimmer from "./cards/Shimmer";
 import { IMG_CDN_URL } from "../config";
 import useRestaurantInfo from "../utils/useRestaurantInfo";
-import {
-  increaseItemQuantity,
-  decreaseItemQuantity,
-  removeItem,
-} from "../utils/cartSlice";
+import { increaseItemQuantity, decreaseItemQuantity } from "../utils/cartSlice";
 
 const RestaurantMenu = () => {
   const { resId } = useParams();
   const [restaurant, menu] = useRestaurantInfo(resId);
+  const [visibleSection, setIsVisibleSection] = useState(0);
 
   const cartItems = useSelector((store) => store.cart);
   const dispatch = useDispatch();
@@ -21,80 +19,113 @@ const RestaurantMenu = () => {
   const handleDecreaseQuantity = (item) => {
     dispatch(decreaseItemQuantity(item));
   };
-  const handleRemoveItem = (item) => {
-    dispatch(removeItem(item));
-  };
 
   return !restaurant ? (
     <Shimmer />
   ) : (
-    <div data-testid="menu" className="flex">
-      <div>
-        <h2>{restaurant?.name}</h2>
+    <div data-testid="menu" className="flex bg-blue text-white">
+      <div className="p-5">
+        <h2 className="font-extrabold text-3xl">{restaurant?.name}</h2>
         <img
+          className="py-5"
           src={IMG_CDN_URL + restaurant?.cloudinaryImageId}
           alt="Restaurant Image"
         />
-        <h3>{restaurant?.areaName}</h3>
-        <h3>{restaurant?.city}</h3>
-        <h3>{restaurant?.avgRating} stars</h3>
+        <div className="flex justify-between">
+          <span className="font-medium text-xl">
+            {restaurant?.areaName + ", " + restaurant?.city}
+          </span>
+          <span>{restaurant?.avgRating} stars</span>
+        </div>
         <h3>{restaurant?.costForTwoMessage}</h3>
       </div>
-      <div className="p-5">
+      <div className="p-5 w-2/3">
         <h1 className="font-bold text-3xl">Menu</h1>
         <ul>
           {menu &&
             menu?.map((category, categoryIndex) => (
-              <li key={categoryIndex}>
-                <h2>{category?.title}</h2>
-                <ol>
-                  {category?.items?.map((item, itemIndex) => (
-                    <li key={`${itemIndex} - ${item?.card?.info?.id}`}>
-                      <p>
-                        <strong>{item?.card?.info?.name}</strong>
-                        <span className="mx-5 bg-orange-300">
-                          &#8377; {item?.card?.info?.price / 100}
-                        </span>
-                        {cartItems[item?.card?.info?.id] && (
-                          <span className="bg-slate-400">
-                            Q: {cartItems[item?.card?.info?.id].quantity} items
-                          </span>
-                        )}
-                        <span>
-                          <button
-                            data-testid="addBtn"
-                            className="mx-5 bg-green-100"
-                            onClick={() =>
-                              handleIncreaseQuantity(item?.card?.info)
-                            }
-                          >
-                            ➕
-                          </button>
-                          <button
-                            className="mx-5 bg-red-100"
-                            onClick={() =>
-                              handleDecreaseQuantity(item?.card?.info)
-                            }
-                          >
-                            ➖
-                          </button>
-                          <button
-                            data-testid="removeBtn"
-                            className="mx-5 bg-blue-100"
-                            onClick={() => handleRemoveItem(item?.card?.info)}
-                          >
-                            ⛌
-                          </button>
-                        </span>
-                      </p>
-                      <p>{item?.card?.info?.description}</p>
-                      {/* <img
+              <li
+                className={
+                  "py-5 px-2 my-2 rounded-lg bg-white text-black" +
+                  (visibleSection === categoryIndex
+                    ? " border border-solid border-white"
+                    : "")
+                }
+                key={categoryIndex}
+              >
+                <div className="flex items-center justify-between font-bold text-2xl">
+                  <span>{category?.title}</span>
+                  <button
+                    onClick={() =>
+                      setIsVisibleSection(
+                        visibleSection === categoryIndex ? -1 : categoryIndex
+                      )
+                    }
+                    className="cursor-pointer"
+                  >
+                    {visibleSection === categoryIndex ? "🔼" : "🔽"}
+                  </button>
+                </div>
+                {visibleSection === categoryIndex && (
+                  <ol>
+                    {category?.items?.map((item, itemIndex) => (
+                      <li
+                        key={`${itemIndex} - ${item?.card?.info?.id}`}
+                        className="text-white px-5 py-2 my-2 bg-black rounded-lg"
+                      >
+                        <div className="flex justify-between pt-1">
+                          <div className="font-medium text-xl">
+                            {item?.card?.info?.name}
+                          </div>
+                          <div className="flex items-center">
+                            <span className="mx-5">
+                              &#8377; {item?.card?.info?.price / 100}
+                            </span>
+                            {cartItems[item?.card?.info?.id] ? (
+                              <div className="w-16 px-1 bg-white text-black border-2 border-double border-blue flex items-center justify-between rounded-full">
+                                <button
+                                  data-testid="addBtn"
+                                  className="py-1"
+                                  onClick={() =>
+                                    handleIncreaseQuantity(item?.card?.info)
+                                  }
+                                >
+                                  ➕
+                                </button>
+                                <span className="text-center">
+                                  {cartItems[item?.card?.info?.id].quantity}
+                                </span>
+                                <button
+                                  className="py-1"
+                                  onClick={() =>
+                                    handleDecreaseQuantity(item?.card?.info)
+                                  }
+                                >
+                                  ➖
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                data-testid="addBtn"
+                                className="w-16 py-1 bg-green text-white rounded-full"
+                                onClick={() =>
+                                  handleIncreaseQuantity(item?.card?.info)
+                                }
+                              >
+                                Add
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                        <p>{item?.card?.info?.description}</p>
+                        {/* <img
                       src={IMG_CDN_URL + item?.card?.info?.imageId}
                       alt="Item Image"
                     /> */}
-                    </li>
-                  ))}
-                </ol>
+                      </li>
+                    ))}
+                  </ol>
+                )}
               </li>
             ))}
         </ul>
