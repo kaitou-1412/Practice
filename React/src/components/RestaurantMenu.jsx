@@ -23,7 +23,7 @@ const RestaurantMenu = () => {
   return !restaurant ? (
     <Shimmer />
   ) : (
-    <div data-testid="menu" className="flex bg-blue text-white">
+    <div data-testid="menu" className="flex bg-blue text-white flex-grow">
       <div className="p-5">
         <h2 className="font-extrabold text-3xl">{restaurant?.name}</h2>
         <img
@@ -40,8 +40,8 @@ const RestaurantMenu = () => {
         <h3>{restaurant?.costForTwoMessage}</h3>
       </div>
       <div className="p-5 w-2/3">
-        <h1 className="font-bold text-3xl">Menu</h1>
-        <ul>
+        {menu.length > 0 && <h1 className="font-bold text-3xl">Menu</h1>}
+        <ul className="pt-3">
           {menu &&
             menu?.map((category, categoryIndex) => (
               <li
@@ -73,7 +73,7 @@ const RestaurantMenu = () => {
                         key={`${itemIndex} - ${item?.card?.info?.id}`}
                         className="text-white px-5 py-2 my-2 bg-black rounded-lg"
                       >
-                        <div className="flex justify-between pt-1">
+                        <div className="flex justify-between py-1">
                           <div className="font-medium text-xl">
                             {item?.card?.info?.name}
                           </div>
@@ -117,11 +117,22 @@ const RestaurantMenu = () => {
                             )}
                           </div>
                         </div>
-                        <p>{item?.card?.info?.description}</p>
-                        {/* <img
-                      src={IMG_CDN_URL + item?.card?.info?.imageId}
-                      alt="Item Image"
-                    /> */}
+
+                        {item?.card?.info?.imageId && (
+                          <div className="py-4">
+                            <img
+                              className="w-64"
+                              src={IMG_CDN_URL + item?.card?.info?.imageId}
+                              alt="Item Image"
+                            />
+                          </div>
+                        )}
+
+                        {item?.card?.info?.description && (
+                          <p className="py-1">
+                            {item?.card?.info?.description}
+                          </p>
+                        )}
                       </li>
                     ))}
                   </ol>

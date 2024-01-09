@@ -16,7 +16,13 @@ const Body = () => {
   const online = useOnline();
 
   if (!online) {
-    return <h1>🔴 Offline, Please check your internet connection!!!</h1>;
+    return (
+      <div className="bg-blue text-white p-5 flex-grow">
+        <h1 className="font-extrabold text-3xl py-5">
+          🔴 Offline, Please check your internet connection!!!
+        </h1>
+      </div>
+    );
   }
 
   // Early return
@@ -72,9 +78,13 @@ const Body = () => {
         </div>
       </div>
       {restaurants.length === 0 ? (
-        <h1>No restaurant matches your search!</h1>
+        <div className="bg-blue text-white p-5 flex-grow">
+          <h1 className="font-extrabold text-3xl py-5">
+            No restaurant matches your search!
+          </h1>
+        </div>
       ) : (
-        <div className="px-10 py-5 bg-black flex-grow">
+        <div className="px-10 py-5 bg-blue flex-grow">
           <div
             data-testid="restaurant-list"
             className="flex flex-wrap justify-start"
