@@ -1,17 +1,10 @@
-const usingProxy = true;
-const API_PROXY_URL = usingProxy
-  ? "https://thingproxy.freeboard.io/fetch/"
-  : "";
+const BASE_API_URL = "https://food-house-fe8h.onrender.com";
 // RestaurantList is JSON Data for displaying cards
 export const IMG_CDN_URL =
   "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/";
 // Swiggy API to get Restaurant data with CORS proxy
-export const swiggy_api_URL =
-  API_PROXY_URL +
-  "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9083215&lng=77.6050777&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING";
-export const FETCH_MENU_URL =
-  API_PROXY_URL +
-  "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=12.9083215&lng=77.6050777&restaurantId=";
+export const swiggy_api_URL = BASE_API_URL + "/api/restaurants";
+export const FETCH_MENU_URL = BASE_API_URL + "/api/menu?restaurantID=";
 export const shimmer_card_unit = 20;
 export const restaurantList = [
   {
