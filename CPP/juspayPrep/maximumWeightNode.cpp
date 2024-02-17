@@ -24,11 +24,15 @@ int solve(int edges[], int N) {
 }
 
 int main() {
-    int N;
-    cin >> N;
-    int Edge[N];
-    for(int i=0; i<N; i++) cin >> Edge[i];
-    cout << solve(Edge, N) << "\n";
+    int T;
+    cin >> T;
+    while(T--) {
+        int N;
+        cin >> N;
+        int Edge[N];
+        for(int i=0; i<N; i++) cin >> Edge[i];
+        cout << solve(Edge, N) << "\n";
+    }
 }
 
 /*
@@ -42,13 +46,15 @@ The task is to find :- the node number of maximum weight node(Weight of the node
 Note:- The cells are named with an integer value from 0 to N-1. If there is no node pointing to the ith node then weight of the ith node is zero.
 
 INPUT FORMAT :-
-
+The first line contains the number of test cases.
+For each test case:
 The first line contains the number of cells N.
 The second line has a list of N values of the edge[ ] array, where edge[i] conatins the cell number that can be reached from cell 'i' in one step. edge[i] is -1 if the ith doesn't have ans exit.
 OUTPUT FORMAT :
 
 First line denotes the node number with maximum weight node.
 Sample Input :
+1
 23
 4 4 1 4 13 8 8 8 0 8 14 9 15 11 -1 10 15 22 22 22 22 22 21
 

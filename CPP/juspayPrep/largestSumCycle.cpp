@@ -68,13 +68,17 @@ pair<int, int> solve(int edges[], int N) {
 }
 
 int main() {
-    int N;
-    cin >> N;
-    int Edge[N];
-    for(int i=0; i<N; i++) cin >> Edge[i];
-    pair<int, int> ans = solve(Edge, N);
-    // cout << "Sum: " << ans.first << " Length: " << ans.second << "\n";
-    cout << ans.second << "\n";
+    int T;
+    cin >> T;
+    while(T--) {
+        int N;
+        cin >> N;
+        int Edge[N];
+        for(int i=0; i<N; i++) cin >> Edge[i];
+        pair<int, int> ans = solve(Edge, N);
+        // cout << "Sum: " << ans.first << " Length: " << ans.second << "\n";
+        cout << ans.first << "\n";
+    }
 }
 
 /*
@@ -91,13 +95,15 @@ INPUT FORMAT :-
 
 The first line contains the number of cells N.
 The second line has a list of N values of the edge[ ] array, where edge[i] conatins the cell number that can be reached from cell 'i' in one step. edge[i] is -1 if the ith doesn't have ans exit.
-OUTPUT FORMAT :
 
-First line denotes length of the largest cycle..
+OUTPUT FORMAT :
+First line denotes sum of the largest sum cycle
+
 Sample Input :
+1
 23
 4 4 1 4 13 8 8 8 0 8 14 9 15 11 -1 10 15 22 22 22 22 22 21
 
 Sample Output :
-6
+45
 */
