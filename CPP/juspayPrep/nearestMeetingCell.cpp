@@ -1,39 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-// int solve(int edges[], int node1, int node2){
-//     int x = node1, y = node2;
-//     unordered_set<int> pathX, pathY;
-//     while(true) {
-//         // cycle condition or both have reached an end.
-//         if (pathX.find(x) != pathX.end() || pathY.find(y) != pathX.end() || (x == -1 && y == -1)) {
-//             return -1;
-//         }
-        
-//         // if current node is already encountered in other node's path
-//         if (pathY.find(x) != pathY.end()) {
-//             return x;
-//         }
-        
-//         // if current node is already encountered in other node's path
-//         if (pathX.find(y) != pathX.end()){
-//             return y;
-//         }
-
-//         // if the node hasn't reached the end move by one step 
-//         if (x != -1) {
-//             pathX.insert(x);
-//             x = edges[x];
-//         }
-
-//         // if the node hasn't reached the end move by one step
-//         if (y != -1) {
-//             pathY.insert(y);
-//             y = edges[y];
-//         }
-//     }
-// }
-
 vector<int> dijkstra(vector<pair<int, int>> adj[], int n, int source) {
     vector<int> res(n, INT_MAX);
     res[source] = 0;
