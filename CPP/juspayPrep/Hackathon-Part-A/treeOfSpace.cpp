@@ -1,173 +1,147 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <unordered_set>
+#include <unordered_map>
 using namespace std;
 
-/* TreeNode is used to store all information 
- (i.e. parent, locked, locked by which id, children, locked descendents) */
-struct TreeNode { 
-	string name; // name of the node
-	int lockedBy; // store locked by which id
-	bool isLocked; // is node locked or not
-	vector<TreeNode*> children; // store all children or current node
-	TreeNode* parent; // parent of current node
-	unordered_set<TreeNode*> lockedDescendents; // store node pointer of locked descendents
+struct TreeNode {
+	string name;
+	int lockedBy;
+	bool isLocked;
+	TreeNode* parent;
+	vector<TreeNode*> children;
+	unordered_set<TreeNode*> lockedDescendants;
 
-    /* constructor to create node by 
-    passing node's name and partner node pointer. 
-    If current node is root node of tree then parent of root will be NULL */
-	TreeNode(string nm, TreeNode* par) {  
+	TreeNode(string nm, TreeNode* par) {
 		name = nm;
-		lockedBy = -1; // Initially we are assuming current node is not locked by any id (-1 means not locked by any id)
+		lockedBy = -1;
+		isLocked = false;
 		parent = par;
-		isLocked = false; // node is unlocked
 	}
 
-    /* create all the children of current node */
-	void addChild(vector<string> &vertices){
+	void addChild(vector<string> &vertices) {
 		for(string &nm: vertices) {
 			children.push_back(new TreeNode(nm, this));
 		}
-	}
+	} 
 };
 
 struct MAryTree {
-	TreeNode* root; // root of the tree
-	unordered_map<string, TreeNode*> nameToTreeNodeMapping; // store node name and node pointer mapping
-	
-    /* constructor of M-Ary-Tree */
-    MAryTree(string name) { 
+	TreeNode* root;
+	unordered_map<string, TreeNode*> nameTreeNodeMapping;
+
+	MAryTree(string name) {
 		root = new TreeNode(name, nullptr);
 	}
 
-    /* this method is used to build the tree (Initially). */
 	void makeMAryTree(vector<string> &vertices, int m) {
-		queue<TreeNode*> q; // using queue to iterate all node like bfs approach
+		queue<TreeNode*> q;
 		int startIndex = 1, index, n = vertices.size();
-		q.push(root); // push root node initially
-		while(!q.empty()) { // iterate node (pop node) and push all its children in the queue.
+		q.push(root);
+		while(!q.empty()) {
 			TreeNode* r = q.front();
 			q.pop();
-			nameToTreeNodeMapping[r->name] = r;
+			nameTreeNodeMapping[r->name] = r;
 			vector<string> children;
 			for(index=startIndex; index < min(n, startIndex+m); index++) {
 				children.push_back(vertices[index]);
 			}
 			r->addChild(children);
-			for(TreeNode* child: r->children) { // insert all its children ( of recently poped node) in the queue
+			for(TreeNode* child: r->children) {
 				q.push(child);
 			}
 			startIndex = index;
 		}
 	}
 
-    /* method is used to print tree (for debug purpose). */
-	void print(TreeNode *r) {
-		if(!r) return;
-		cout << "TreeNode -> " << r->name<< " " << r->lockedBy << " " << "\n";
-		cout << "Children -> \n";
-		for(TreeNode* child: r->children) {
-			cout << "       " << child->name << "\n";
-		}
-		cout << "Locked -> \n";
-		for(TreeNode* child: r->lockedDescendents) {
-			cout << "       " << child->name << "\n";
-		}
-		for(TreeNode* child: r->children){
-			print(child);
-		}
-	}
-
-    /* inform all ancestor about its child locking in O(logN base M)
-       N -> Total no of nodes in the tree
-       M -> M-ary-tree */
 	void informAncestors(TreeNode* curr, bool isLocked) {
-        TreeNode* par = curr->parent; 
+		TreeNode* par = curr->parent;
 		while(par) {
-			if(isLocked) par->lockedDescendents.insert(curr);
-            else par->lockedDescendents.erase(curr);
+			if(isLocked) par->lockedDescendants.insert(curr);
+			else par->lockedDescendants.erase(curr);
 			par = par->parent;
 		}
 	}
 
-    bool checkLockedAncestors(TreeNode* curr) {
-        TreeNode* par = curr->parent; 
+	bool checkLockedAncestors(TreeNode* curr) {
+		TreeNode* par = curr->parent;
 		while(par) {
 			if(par->isLocked) return true;
 			par = par->parent;
 		}
-        return false;
+		return false;
 	}
 
-    /* method is required to lock the node which is given in problem statement */
-	bool lock(string name, int id) { 
-		TreeNode* r = nameToTreeNodeMapping[name]; // fetch the node pointer using its name
-		if(r->isLocked || r->lockedDescendents.size()) return false; // check if node is already locked and have any locked descendants than return false (if any condition become true)
-		// check if any ancestor is locked or not (by any id) if yes than we can't lock current node
-        if(checkLockedAncestors(r)) return false;
-		informAncestors(r, true); // inform all ancestor about its locking in O(logm(n) time)
-		r->isLocked = true; // lock the node
+	bool lock(string name, int id) {
+		TreeNode* r = nameTreeNodeMapping[name];
+		if(r->isLocked || r->lockedDescendants.size()) return false;
+		if(checkLockedAncestors(r)) return false;
+		informAncestors(r, true);
+		r->isLocked = true;
 		r->lockedBy = id;
 		return true;
 	}
 
 	bool unlock(string name, int id) {
-		TreeNode* r = nameToTreeNodeMapping[name];
-		if(!r->isLocked || r->lockedBy != id) return false; // return false if node is unlocked or locked by different id
-		informAncestors(r, false); // inform all Ancestors about its unlocking
-		r->isLocked = false; // unlock it
+		TreeNode* r = nameTreeNodeMapping[name];
+		if(!r->isLocked || r->lockedBy != id) return false;
+		informAncestors(r, false);
+		r->isLocked = false;
 		r->lockedBy = -1;
 		return true;
 	}
 
 	bool upgradeLock(string name, int id) {
-		TreeNode* r = nameToTreeNodeMapping[name];
-		if(r->isLocked || r->lockedDescendents.empty()) return false; // return false if node is already locked or have 0 locked descendants
-		for(TreeNode* ld: r->lockedDescendents) { // check all the descendants are locked by same id or not
+		TreeNode* r = nameTreeNodeMapping[name];
+		if(r->isLocked || r->lockedDescendants.empty()) return false;
+		for(TreeNode* ld: r->lockedDescendants) {
 			if(ld->lockedBy != id) return false;
 		}
-        // check if any ancestor is locked or not
 		if(checkLockedAncestors(r)) return false;
-		unordered_set<TreeNode*> stt = r->lockedDescendents;
-		for(TreeNode* ld: stt) { // unlock all descendants
-			// cout << ld->name << "\n";
+		unordered_set<TreeNode*> setOfLockedDescendants = r->lockedDescendants;
+		for(TreeNode* ld: setOfLockedDescendants) {
 			unlock(ld->name, id);
 		}
-		lock(name, id); // lock current node
+		lock(name, id);
 		return true;
 	}
 };
 
+void solve() {
+	int n, m, q;
+	cin >> n >> m >> q;
+	vector<string> vertices(n);
+	for(int i=0; i<n; i++) cin >> vertices[i];
+	MAryTree* tree = new MAryTree(vertices[0]);
+	tree->makeMAryTree(vertices, m);
+	while(q--) {
+		bool res = false;
+		int opType, uid;
+		string name;
+		cin >> opType >> name >> uid;
+		switch(opType) {
+			case 1:
+				res = tree->lock(name, uid);
+				break;
+			case 2:
+				res = tree->unlock(name, uid);
+				break;
+			case 3:
+				res = tree->upgradeLock(name, uid);
+				break;
+			default:
+				break;
+		}
+		cout << (res ? "true" : "false") << "\n";
+	}										
+}
+
 int main() {
-    int t;
-    cin >> t;
-	while(t--) {
-        int n, m, q;
-        cin >> n >> m >> q;
-        vector<string> vertices(n);
-        for(int i=0; i<n; i++) cin >> vertices[i];
-        MAryTree* tree = new MAryTree(vertices[0]);
-        tree->makeMAryTree(vertices, m);
-        // tree->print(tree->root);
-        while(q--) {
-            int opType, id;
-            string name;
-            cin >> opType >> name >> id;
-            bool res = false;
-            switch (opType) {
-                case 1:
-                    res = tree->lock(name, id);
-                    break;
-                case 2:
-                    res = tree->unlock(name, id);
-                    break;
-                case 3:
-                    res = tree->upgradeLock(name, id);
-                    break;
-                default:
-                    break;
-            }
-            cout << (res ? "true" : "false") << "\n";
-        }
-    }
+	int t;
+	cin >> t;
+	while(t--) solve();
+    return 0;									
 }
 
 
