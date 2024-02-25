@@ -22,8 +22,8 @@ struct TreeNode {
 	}
 
     /* create all the children of current node */
-	void addChild(vector<string> &a){
-		for(string &nm: a){
+	void addChild(vector<string> &vertices){
+		for(string &nm: vertices) {
 			children.push_back(new TreeNode(nm, this));
 		}
 	}
@@ -39,23 +39,23 @@ struct MAryTree {
 	}
 
     /* this method is used to build the tree (Initially). */
-	void makeMAryTree(vector<string> &a, int m) {
+	void makeMAryTree(vector<string> &vertices, int m) {
 		queue<TreeNode*> q; // using queue to iterate all node like bfs approach
-		int k = 1, i, n = a.size();
+		int startIndex = 1, index, n = vertices.size();
 		q.push(root); // push root node initially
 		while(!q.empty()) { // iterate node (pop node) and push all its children in the queue.
 			TreeNode* r = q.front();
 			q.pop();
 			nameToTreeNodeMapping[r->name] = r;
-			vector<string> b;
-			for(i=k; i<min(n,k+m); i++) {
-				b.push_back(a[i]);
+			vector<string> children;
+			for(index=startIndex; index < min(n, startIndex+m); index++) {
+				children.push_back(vertices[index]);
 			}
-			r->addChild(b);
+			r->addChild(children);
 			for(TreeNode* child: r->children) { // insert all its children ( of recently poped node) in the queue
 				q.push(child);
 			}
-			k = i;
+			startIndex = index;
 		}
 	}
 
@@ -77,25 +77,33 @@ struct MAryTree {
 	}
 
     /* inform all ancestor about its child locking in O(logN base M)
-       N is the total no of node in the tree
+       N -> Total no of nodes in the tree
        M -> M-ary-tree */
-	void updateParents(TreeNode* r, TreeNode* curr) { 
-		while(r) {
-			r->lockedDescendents.insert(curr);
-			r = r->parent;
+	void informAncestors(TreeNode* curr, bool isLocked) {
+        TreeNode* par = curr->parent; 
+		while(par) {
+			if(isLocked) par->lockedDescendents.insert(curr);
+            else par->lockedDescendents.erase(curr);
+			par = par->parent;
 		}
+	}
+
+    bool checkLockedAncestors(TreeNode* curr) {
+        TreeNode* par = curr->parent; 
+		while(par) {
+			if(par->isLocked) return true;
+			par = par->parent;
+		}
+        return false;
 	}
 
     /* method is required to lock the node which is given in problem statement */
 	bool lock(string name, int id) { 
 		TreeNode* r = nameToTreeNodeMapping[name]; // fetch the node pointer using its name
 		if(r->isLocked || r->lockedDescendents.size()) return false; // check if node is already locked and have any locked descendants than return false (if any condition become true)
-		TreeNode* par= r->parent;
-		while(par) { // check if any ancestor is locked or not (by any id) if yes than we can't lock current node
-			if(par->isLocked) return false;
-			par = par->parent;
-		}
-		updateParents(r->parent, r); // inform all ancestor about its locking in O(logm(n) time)
+		// check if any ancestor is locked or not (by any id) if yes than we can't lock current node
+        if(checkLockedAncestors(r)) return false;
+		informAncestors(r, true); // inform all ancestor about its locking in O(logm(n) time)
 		r->isLocked = true; // lock the node
 		r->lockedBy = id;
 		return true;
@@ -104,11 +112,7 @@ struct MAryTree {
 	bool unlock(string name, int id) {
 		TreeNode* r = nameToTreeNodeMapping[name];
 		if(!r->isLocked || r->lockedBy != id) return false; // return false if node is unlocked or locked by different id
-		TreeNode *par = r->parent;
-		while(par) { // inform all Ancestors about its unlocking
-			par->lockedDescendents.erase(r);
-			par = par->parent;
-		}
+		informAncestors(r, false); // inform all Ancestors about its unlocking
 		r->isLocked = false; // unlock it
 		r->lockedBy = -1;
 		return true;
@@ -120,11 +124,8 @@ struct MAryTree {
 		for(TreeNode* ld: r->lockedDescendents) { // check all the descendants are locked by same id or not
 			if(ld->lockedBy != id) return false;
 		}
-		TreeNode* par = r->parent;
-		while(par) { // check if any ancestor is locked or not
-			if(par->isLocked) return false;
-			par = par->parent;
-		}
+        // check if any ancestor is locked or not
+		if(checkLockedAncestors(r)) return false;
 		unordered_set<TreeNode*> stt = r->lockedDescendents;
 		for(TreeNode* ld: stt) { // unlock all descendants
 			// cout << ld->name << "\n";
