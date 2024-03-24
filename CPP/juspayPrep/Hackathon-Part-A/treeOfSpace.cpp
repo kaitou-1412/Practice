@@ -5,18 +5,122 @@
 #include <unordered_map>
 using namespace std;
 
+// struct TreeNode {
+// 	string name;
+// 	int lockedBy;
+// 	bool isLocked;
+// 	TreeNode* parent;
+// 	vector<TreeNode*> children;
+// 	unordered_set<TreeNode*> lockedDescendants;
+
+// 	TreeNode(string nm, TreeNode* par) {
+// 		name = nm;
+// 		lockedBy = -1;
+// 		isLocked = false;
+// 		parent = par;
+// 	}
+
+// 	void addChild(vector<string> &vertices) {
+// 		for(string &nm: vertices) {
+// 			children.push_back(new TreeNode(nm, this));
+// 		}
+// 	} 
+// };
+
+// struct MAryTree {
+// 	TreeNode* root;
+// 	unordered_map<string, TreeNode*> nameTreeNodeMapping;
+
+// 	MAryTree(string name) {
+// 		root = new TreeNode(name, nullptr);
+// 	}
+
+// 	void makeMAryTree(vector<string> &vertices, int m) {
+// 		queue<TreeNode*> q;
+// 		int startIndex = 1, index, n = vertices.size();
+// 		q.push(root);
+// 		while(!q.empty()) {
+// 			TreeNode* r = q.front();
+// 			q.pop();
+// 			nameTreeNodeMapping[r->name] = r;
+// 			vector<string> children;
+// 			for(index=startIndex; index < min(n, startIndex+m); index++) {
+// 				children.push_back(vertices[index]);
+// 			}
+// 			r->addChild(children);
+// 			for(TreeNode* child: r->children) {
+// 				q.push(child);
+// 			}
+// 			startIndex = index;
+// 		}
+// 	}
+
+// 	void informAncestors(TreeNode* curr, bool isLocked) {
+// 		TreeNode* par = curr->parent;
+// 		while(par) {
+// 			if(isLocked) par->lockedDescendants.insert(curr);
+// 			else par->lockedDescendants.erase(curr);
+// 			par = par->parent;
+// 		}
+// 	}
+
+// 	bool checkLockedAncestors(TreeNode* curr) {
+// 		TreeNode* par = curr->parent;
+// 		while(par) {
+// 			if(par->isLocked) return true;
+// 			par = par->parent;
+// 		}
+// 		return false;
+// 	}
+
+// 	bool lock(string name, int id) {
+// 		TreeNode* r = nameTreeNodeMapping[name];
+// 		if(r->isLocked || r->lockedDescendants.size()) return false;
+// 		if(checkLockedAncestors(r)) return false;
+// 		informAncestors(r, true);
+// 		r->isLocked = true;
+// 		r->lockedBy = id;
+// 		return true;
+// 	}
+
+// 	bool unlock(string name, int id) {
+// 		TreeNode* r = nameTreeNodeMapping[name];
+// 		if(!r->isLocked || r->lockedBy != id) return false;
+// 		informAncestors(r, false);
+// 		r->isLocked = false;
+// 		r->lockedBy = -1;
+// 		return true;
+// 	}
+
+// 	bool upgradeLock(string name, int id) {
+// 		TreeNode* r = nameTreeNodeMapping[name];
+// 		if(r->isLocked || r->lockedDescendants.empty()) return false;
+// 		for(TreeNode* ld: r->lockedDescendants) {
+// 			if(ld->lockedBy != id) return false;
+// 		}
+// 		if(checkLockedAncestors(r)) return false;
+// 		unordered_set<TreeNode*> setOfLockedDescendants = r->lockedDescendants;
+// 		for(TreeNode* ld: setOfLockedDescendants) {
+// 			unlock(ld->name, id);
+// 		}
+// 		lock(name, id);
+// 		return true;
+// 	}
+// };
+
 struct TreeNode {
 	string name;
 	int lockedBy;
 	bool isLocked;
+	int lockedDescendantCount;
 	TreeNode* parent;
 	vector<TreeNode*> children;
-	unordered_set<TreeNode*> lockedDescendants;
 
 	TreeNode(string nm, TreeNode* par) {
 		name = nm;
 		lockedBy = -1;
 		isLocked = false;
+		lockedDescendantCount = 0;
 		parent = par;
 	}
 
@@ -30,6 +134,7 @@ struct TreeNode {
 struct MAryTree {
 	TreeNode* root;
 	unordered_map<string, TreeNode*> nameTreeNodeMapping;
+	unordered_set<TreeNode*> lockedNodes;
 
 	MAryTree(string name) {
 		root = new TreeNode(name, nullptr);
@@ -58,8 +163,8 @@ struct MAryTree {
 	void informAncestors(TreeNode* curr, bool isLocked) {
 		TreeNode* par = curr->parent;
 		while(par) {
-			if(isLocked) par->lockedDescendants.insert(curr);
-			else par->lockedDescendants.erase(curr);
+			if(isLocked) par->lockedDescendantCount++;
+			else par->lockedDescendantCount--;
 			par = par->parent;
 		}
 	}
@@ -75,12 +180,30 @@ struct MAryTree {
 
 	bool lock(string name, int id) {
 		TreeNode* r = nameTreeNodeMapping[name];
-		if(r->isLocked || r->lockedDescendants.size()) return false;
-		if(checkLockedAncestors(r)) return false;
-		informAncestors(r, true);
+		if(r->isLocked || r->lockedDescendantCount > 0) return false;
 		r->isLocked = true;
 		r->lockedBy = id;
-		return true;
+		TreeNode* par = r->parent;
+		while(par) {
+			if (!par->isLocked) {
+				par->lockedDescendantCount++;
+				par = par->parent;
+			} else {
+				TreeNode* par_end = par;
+				par = r->parent;
+				do {
+					par->lockedDescendantCount--;
+					par = par->parent;
+				} while(par != par_end);
+				r->isLocked = false;
+				r->lockedBy = -1;
+				break;
+			}
+		}
+		if (r->isLocked) {
+			lockedNodes.insert(r);
+		}
+		return r->isLocked;
 	}
 
 	bool unlock(string name, int id) {
@@ -89,18 +212,27 @@ struct MAryTree {
 		informAncestors(r, false);
 		r->isLocked = false;
 		r->lockedBy = -1;
+		lockedNodes.erase(r);
 		return true;
 	}
 
 	bool upgradeLock(string name, int id) {
 		TreeNode* r = nameTreeNodeMapping[name];
-		if(r->isLocked || r->lockedDescendants.empty()) return false;
-		for(TreeNode* ld: r->lockedDescendants) {
-			if(ld->lockedBy != id) return false;
+		if(r->isLocked || r->lockedDescendantCount == 0) return false;
+		vector<TreeNode*> lockedDescendants;
+		for(TreeNode* ld: lockedNodes) {
+			TreeNode* par = ld->parent;
+			while(par) {
+				if(par == r) {
+					if(ld->lockedBy != id) return false;
+					lockedDescendants.push_back(ld);
+					break;
+				}
+				par = par->parent;
+			}
 		}
 		if(checkLockedAncestors(r)) return false;
-		unordered_set<TreeNode*> setOfLockedDescendants = r->lockedDescendants;
-		for(TreeNode* ld: setOfLockedDescendants) {
+		for(TreeNode* ld: lockedDescendants) {
 			unlock(ld->name, id);
 		}
 		lock(name, id);
@@ -146,7 +278,7 @@ int main() {
 
 
 /*
-Problem Statement :- Largest Sum Cycle
+Problem Statement :- Tree of Space
 You are given a complete, balanced M-Ary Tree and must support Q queries. There are 3 kinds of queries. Return true or false depending on whether the query was successful.
 
 Lock(v, id) - Lock vertex v for user - id
@@ -227,7 +359,7 @@ check in O(5) time)
 -- check 0 ancestors are locked or not in O(logm(n)) time
 --- unlock all descendants in O(no of locked descendantslogm(n)) time
 
-Space complexity -> O(n)
+Space complexity -> O((n / m) * logm(n))
 
 In upgrade operation we have to lock one node that we want to upgrade -> O(logm(n))
 we have to unlock all locked descendant of the given node -> each will take O(logm(n))
