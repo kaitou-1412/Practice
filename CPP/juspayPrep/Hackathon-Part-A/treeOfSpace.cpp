@@ -115,6 +115,7 @@ struct TreeNode {
 	int lockedDescendantCount;
 	TreeNode* parent;
 	vector<TreeNode*> children;
+	int threadCount;
 
 	TreeNode(string nm, TreeNode* par) {
 		name = nm;
@@ -122,6 +123,7 @@ struct TreeNode {
 		isLocked = false;
 		lockedDescendantCount = 0;
 		parent = par;
+		threadCount = 0;
 	}
 
 	void addChild(vector<string> &vertices) {
@@ -178,31 +180,60 @@ struct MAryTree {
 		return false;
 	}
 
+	// bool lock(string name, int id) {
+	// 	TreeNode* r = nameTreeNodeMapping[name];
+	// 	r->threadCount++;
+	// 	if(r->threadCount > 1 || r->isLocked || r->lockedDescendants.size()) return false;
+	// 	r->isLocked = true;
+	// 	r->lockedBy = id;
+	// 	TreeNode* par = r->parent;
+	// 	while(par) {
+	// 		par->lockedDescendants.insert(r);
+	// 		if (par->isLocked) {
+	// 			TreeNode* lockedParent = par;
+	// 			lockedParent->lockedDescendants.erase(r);
+	// 			par = r->parent;
+	// 			while(par != lockedParent) {
+	// 				par->lockedDescendants.erase(r);
+	// 				par = par->parent;
+	// 			}
+	// 			r->isLocked = false;
+	// 			r->lockedBy = -1;
+	// 			break;
+	// 		}
+	// 		par = par->parent;
+	// 	}
+	// 	r->threadCount--;
+	// 	return r->isLocked;
+	// }
+
 	bool lock(string name, int id) {
 		TreeNode* r = nameTreeNodeMapping[name];
-		if(r->isLocked || r->lockedDescendantCount > 0) return false;
+		r->threadCount++;
+		if(r->threadCount > 1 || r->isLocked || r->lockedDescendantCount > 0) return false;
 		r->isLocked = true;
 		r->lockedBy = id;
 		TreeNode* par = r->parent;
 		while(par) {
-			if (!par->isLocked) {
-				par->lockedDescendantCount++;
-				par = par->parent;
-			} else {
-				TreeNode* par_end = par;
+			par->lockedDescendantCount++;
+			if (par->isLocked) {
+				TreeNode* lockedParent = par;
+				lockedParent->lockedDescendantCount--;
 				par = r->parent;
-				do {
+				while(par != lockedParent) {
 					par->lockedDescendantCount--;
 					par = par->parent;
-				} while(par != par_end);
+				}
 				r->isLocked = false;
 				r->lockedBy = -1;
 				break;
 			}
+			par = par->parent;
 		}
 		if (r->isLocked) {
 			lockedNodes.insert(r);
 		}
+		r->threadCount--;
 		return r->isLocked;
 	}
 
