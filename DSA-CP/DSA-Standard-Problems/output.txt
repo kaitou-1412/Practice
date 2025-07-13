@@ -1,16 +1,8 @@
-Before Sorting:
-2 7 4 9 1 
-After Sorting:
-1 2 4 7 9 
-Before Sorting:
-1 2 3 4 5 
-After Sorting:
-1 2 3 4 5 
-Before Sorting:
-16 12 8 4 
-After Sorting:
-4 8 12 16 
-Before Sorting:
-5 2 7 3 
-After Sorting:
-2 3 5 7 
+Sorted Array: 1 2 4 7 9 
+Element 9 found at index: 4
+Sorted Array: 1 2 3 4 5 
+Element 6 not found in the array.
+Sorted Array: 4 8 12 16 
+Element 6 not found in the array.
+Sorted Array: 2 3 5 7 
+Element 5 found at index: 2
