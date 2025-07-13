@@ -19,6 +19,11 @@ using namespace std;
  * Time Complexity: O(log(min(n, m))) — Each recursive call reduces the problem size significantly.
  * Space Complexity: O(log(min(n, m))) — Due to the recursion stack.
  */
+int gcd(long long int n, long long int m) {
+    if (n < m) return gcd(m, n);
+    if (m == 0) return n;
+    return gcd(m, n % m);
+}
 
 void solve() {
     long long int a, b;
