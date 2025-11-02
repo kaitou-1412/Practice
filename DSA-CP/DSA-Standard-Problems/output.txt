@@ -1,6 +1,2 @@
-Sorted Array: 1 2 3 4 
-Target index: 2
-Sorted Array: 1 2 3 3 5 
-Target 7 not found
-Sorted Array: 7 
-Target index: 0
+120
+20
